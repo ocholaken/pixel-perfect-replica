@@ -1,0 +1,41 @@
+.luxury-shop-header{padding:64px 0 36px;text-align:center;background:radial-gradient(circle at 50% 30%,rgba(201,168,106,.28),transparent 44%),linear-gradient(180deg,#fffaf0 0%,rgba(255,250,240,0) 100%)}
+.luxury-shop-header h1{margin:12px 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:48px;font-weight:300;color:#000}
+.luxury-shop-header p{margin:0;color:#111827;font-size:17px;font-weight:500}
+.luxury-shop-count{display:inline-flex;align-items:center;gap:6px;margin-top:22px;padding:8px 16px;border:1px solid rgba(201,168,106,.5);border-radius:999px;background:rgba(255,255,255,.78);color:#554b3f;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.luxury-shop-count strong{color:#a27b38;font-family:Georgia,"Times New Roman",serif;font-size:18px}
+.luxury-shop-section{width:100%;padding:30px 0 70px;box-sizing:border-box}
+.luxury-shop-toolbar{margin-bottom:28px}
+.luxury-shop-toolbar>label{display:block;margin-bottom:8px;font-size:16px}
+.luxury-shop-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,280px);gap:12px}
+.luxury-shop-controls input,.luxury-shop-controls select{width:100%;height:56px;box-sizing:border-box;border:2px solid rgba(0,0,0,.2);border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:500}
+.luxury-shop-controls input{padding:0 24px;min-width:0}.luxury-shop-controls input::placeholder{color:#6b7280;opacity:1}
+.luxury-shop-controls input:focus,.luxury-shop-controls select:focus{border-color:#c9a86a;outline:none;box-shadow:0 0 0 2px rgba(201,168,106,.2)}
+.luxury-featured-select{min-width:0}.luxury-shop-controls select{padding:0 24px}
+.luxury-shop-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:28px;width:100%}
+.luxury-shop-filters{display:flex;flex-direction:column;gap:10px}
+.luxury-shop-filters button{padding:11px 24px;border:1px solid #e8d5b5;border-radius:999px;background:#fff;color:#000;font-size:15px;font-weight:600;text-align:left;cursor:pointer}
+.luxury-shop-filters button.active{border-color:#c9a86a;background:#c9a86a;color:#000;font-weight:700}
+.luxury-shop-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;width:100%;min-width:0}
+@media(min-width:768px){.luxury-shop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1024px){.luxury-shop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1280px){.luxury-shop-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}}
+.luxury-cake-card{min-width:0;overflow:hidden;border:1px solid #e8d5b5;border-radius:20px;background:#fff;box-shadow:0 12px 36px rgba(79,54,31,.08);transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s,border-color .45s}
+.luxury-cake-card:hover{transform:translateY(-10px);border-color:#c9a86a;box-shadow:0 24px 70px rgba(201,168,106,.28)}
+.luxury-cake-card.highlighted{outline:3px solid #c9a86a;outline-offset:4px}
+.luxury-card-image{position:relative;display:block;width:100%;height:300px;padding:0;border:0;background:#fdf6e7;overflow:hidden;cursor:pointer}
+.luxury-card-image img,.luxury-image-placeholder{width:100%;height:300px;object-fit:cover;object-position:center;transition:transform .8s cubic-bezier(.2,.7,.3,1),filter .5s}
+.luxury-card-image:after{position:absolute;right:14px;bottom:14px;width:42px;height:42px;border:1px solid rgba(255,255,255,.75);border-radius:50%;background:rgba(0,0,0,.18);content:"View";display:flex;align-items:center;justify-content:center;color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:8px;text-transform:uppercase;backdrop-filter:blur(5px)}
+.luxury-image-placeholder{padding:20px;color:#000;text-align:center}
+.luxury-cake-card:hover .luxury-card-image img,.luxury-cake-card:hover .luxury-image-placeholder{transform:scale(1.085);filter:saturate(1.08) contrast(1.02)}
+.luxury-cake-badge{position:absolute;left:16px;top:16px;padding:7px 13px;border:1px solid rgba(255,255,255,.65);border-radius:999px;background:rgba(201,168,106,.92);box-shadow:0 5px 18px rgba(0,0,0,.12);color:#000;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.luxury-card-body{padding:22px}.luxury-card-title{padding:0;border:0;background:none;color:#000;font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:700;text-align:left;cursor:pointer}
+.luxury-card-body>p{display:-webkit-box;overflow:hidden;min-height:42px;margin-top:4px;color:#111827;font-size:14px;font-weight:500;line-height:1.5;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.luxury-card-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.luxury-card-footer>strong{color:#000;font-size:16px;font-weight:700}.luxury-card-footer button,.luxury-shop-message button{min-height:44px;padding:0 20px;border:0;border-radius:999px;background:#c9a86a;color:#000;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.luxury-card-footer button:hover,.luxury-shop-message button:hover{background:#000;color:#fff}
+.luxury-card-skeleton{height:390px;padding:20px;border-radius:20px;border:1px solid #e8d5b5;background:#fff}
+.luxury-card-skeleton div,.luxury-card-skeleton span{display:block;margin-bottom:16px;background:linear-gradient(90deg,#eee 25%,#f7f1e5 50%,#eee 75%);background-size:200% 100%;animation:luxury-pulse 1.4s infinite}
+.luxury-card-skeleton div{height:250px;border-radius:12px}.luxury-card-skeleton span{height:18px;border-radius:5px}.luxury-card-skeleton span:last-child{width:55%}
+@keyframes luxury-pulse{to{background-position:-200% 0}}
+.luxury-shop-message{max-width:650px;margin:30px auto;padding:28px;border:1px solid #e8d5b5;border-radius:20px;background:#fff;color:#111827;text-align:center}.luxury-shop-message strong{display:block;color:#000;font-size:20px}.luxury-shop-message p{color:#111827}.luxury-shop-link{display:block;margin-top:30px;color:#6d4c21;font-size:14px;font-weight:700;text-align:center}
+@media(max-width:900px){.luxury-shop-layout{grid-template-columns:minmax(0,1fr)}.luxury-shop-filters{flex-direction:row;overflow-x:auto;padding-bottom:4px}}
+@media(max-width:767px){.luxury-shop-header{padding-top:48px}.luxury-shop-controls{grid-template-columns:minmax(0,1fr)}.luxury-shop-header h1{font-size:40px}.luxury-shop-filters{max-width:100%}.luxury-shop-filters button{flex:none}}

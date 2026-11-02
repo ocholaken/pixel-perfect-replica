@@ -13,9 +13,12 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import pastryCss from "../pastry.css?url";
+import customAccessibilityCss from "../custom-accessibility.css?url";
+import shopLuxuryCss from "../shop-luxury.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/store";
 import { SiteLayout } from "../components/site";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -100,6 +103,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: pastryCss,
       },
+      {
+        rel: "stylesheet",
+        href: customAccessibilityCss,
+      },
+      {
+        rel: "stylesheet",
+        href: shopLuxuryCss,
+      },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -130,6 +141,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
+        <Toaster position="top-center" richColors closeButton />
         <SiteLayout><div key={pathname} className="route-transition"><Outlet /></div></SiteLayout>
       </CartProvider>
     </QueryClientProvider>

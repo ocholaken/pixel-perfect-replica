@@ -1,17 +1,59 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { supabase } from "./supabaseClient";
 
-export type Product = { slug: string; name: string; category: string; price: number; image: string; description: string; flavours: string[]; sizes: string[] };
-export const products: Product[] = [
-  { slug: "birthday-bliss", name: "Birthday Bliss Cake", category: "Birthday Cakes", price: 3800, image: "/images/cakes/birthday.jpg", description: "A joyful celebration cake with silky vanilla cream and delicate decorations.", flavours: ["Vanilla", "Chocolate"], sizes: ["6 inch", "8 inch", "10 inch"] },
-  { slug: "chocolate-fudge", name: "Chocolate Fudge Indulgence", category: "Chocolate Cakes", price: 4200, image: "/images/cakes/chocolate-fudge.jpg", description: "Deep cocoa sponge, glossy fudge and elegant chocolate finishing.", flavours: ["Dark chocolate", "Milk chocolate"], sizes: ["6 inch", "8 inch", "10 inch"] },
-  { slug: "red-velvet", name: "Classic Red Velvet", category: "Red Velvet Cakes", price: 4000, image: "/images/cakes/red-velvet.jpg", description: "Velvety cocoa sponge paired with smooth cream cheese frosting.", flavours: ["Red velvet"], sizes: ["6 inch", "8 inch", "10 inch"] },
-  { slug: "vanilla-berry", name: "Vanilla Berry Garden", category: "Vanilla Cakes", price: 3900, image: "/images/cakes/vanilla-berry.jpg", description: "Light vanilla sponge layered with berry preserve and vanilla cream.", flavours: ["Vanilla", "Strawberry vanilla"], sizes: ["6 inch", "8 inch", "10 inch"] },
-  { slug: "graduation-celebration", name: "Graduation Celebration", category: "Graduation Cakes", price: 4500, image: "/images/cakes/graduation.jpg", description: "A polished celebration cake designed to honour an unforgettable achievement.", flavours: ["Vanilla", "Chocolate", "Red velvet"], sizes: ["8 inch", "10 inch", "12 inch"] },
-  { slug: "blush-wedding", name: "Blush Wedding Cake", category: "Wedding Cakes", price: 12000, image: "/images/cakes/wedding-blush.jpg", description: "Soft romantic tiers finished with refined florals and delicate detail.", flavours: ["Vanilla", "Red velvet", "Lemon"], sizes: ["3 tiers", "4 tiers", "5 tiers"] },
-  { slug: "ivory-wedding", name: "Ivory Elegance", category: "Wedding Cakes", price: 13500, image: "/images/cakes/wedding-ivory.jpg", description: "A timeless ivory wedding cake for elegant, memorable celebrations.", flavours: ["Vanilla", "Chocolate", "Almond"], sizes: ["3 tiers", "4 tiers", "5 tiers"] },
-  { slug: "custom-floral", name: "Custom Floral Cake", category: "Custom Celebration Cakes", price: 4800, image: "/images/cakes/custom-floral.jpg", description: "A bespoke cake finished with handcrafted floral details in your colour palette.", flavours: ["Vanilla", "Chocolate", "Red velvet"], sizes: ["6 inch", "8 inch", "10 inch"] },
-  { slug: "celebration-cupcakes", name: "Celebration Cupcake Box", category: "Cupcakes", price: 2600, image: "/images/cakes/cupcakes.jpg", description: "A box of twelve beautifully finished celebration cupcakes.", flavours: ["Vanilla", "Chocolate", "Red velvet"], sizes: ["12 cupcakes", "24 cupcakes"] }
-];
+export type Product = { id?: string; slug: string; name: string; category: string; price: number; image: string; image_url?: string; color_theme?: string; description: string; flavours: string[]; sizes: string[]; active?: boolean; is_active?: boolean };
+
+const cakeImageUrls: Record<string, string> = {
+  "/images/cakes/birthday.jpg": "/images/cakes/birthday.jpg",
+  "/images/cakes/chocolate-fudge.jpg": "/images/cakes/chocolate-fudge.jpg",
+  "/images/cakes/cupcakes.jpg": "/images/cakes/cupcakes.jpg",
+  "/images/cakes/custom-floral.jpg": "/images/cakes/custom-floral.jpg",
+  "/images/cakes/graduation.jpg": "/images/cakes/graduation.jpg",
+  "/images/cakes/red-velvet.jpg": "/images/cakes/red-velvet.jpg",
+  "/images/cakes/vanilla-berry.jpg": "/images/cakes/vanilla-berry.jpg",
+  "/images/cakes/wedding-blush.jpg": "/images/cakes/wedding-blush.jpg",
+  "/images/cakes/wedding-ivory.jpg": "/images/cakes/wedding-ivory.jpg",
+  "/images/cakes/baby-shower.jpg": "/images/cakes/baby-shower.jpg",
+};
+
+export function useProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    supabase
+      .from("products")
+      .select("*")
+      .then(({ data, error: queryError }) => {
+        if (!active) return;
+        const visible = (data ?? [])
+          .map((product) => {
+            const record = product as Product;
+            const resolvedImage = record.image_url || cakeImageUrls[record.image] || record.image;
+            return {
+              ...record,
+              image: resolvedImage,
+              flavours: Array.isArray(record.flavours) ? record.flavours.map(String) : [],
+              sizes: Array.isArray(record.sizes) ? record.sizes.map(String) : [],
+              image_url: resolvedImage,
+            };
+          })
+          .filter((product) => {
+            const record = product as Product;
+            return record.active !== false && record.is_active !== false;
+          })
+          .sort((a, b) => (Number((a as Product & { sort_order?: number }).sort_order ?? 0) - Number((b as Product & { sort_order?: number }).sort_order ?? 0)));
+        setProducts(visible);
+        setError(queryError?.message ?? null);
+        setLoading(false);
+      });
+    return () => { active = false; };
+  }, []);
+
+  return { products, loading, error };
+}
 export type CartItem = { key: string; slug: string; name: string; image: string; size: string; flavour: string; price: number; quantity: number };
 type CartContextValue = { cart: CartItem[]; add: (item: Omit<CartItem,"key"|"quantity"> & {quantity?:number})=>void; setQuantity:(key:string,q:number)=>void; remove:(key:string)=>void; clear:()=>void; count:number; total:number };
 const CartContext = createContext<CartContextValue | null>(null);

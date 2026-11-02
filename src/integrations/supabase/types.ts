@@ -14,7 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: { id: string; slug: string; name: string; category: string; price: number; image: string; description: string; flavours: Json; sizes: Json; active: boolean; sort_order: number; created_at: string };
+        Insert: { id?: string; slug: string; name: string; category: string; price: number; image?: string; description?: string; flavours?: Json; sizes?: Json; active?: boolean; sort_order?: number; created_at?: string };
+        Update: Partial<Database["public"]["Tables"]["products"]["Insert"]>;
+        Relationships: [];
+      };
+      customers: {
+        Row: { id: string; full_name: string; phone: string; email: string | null; created_at: string };
+        Insert: { id?: string; full_name: string; phone: string; email?: string | null; created_at?: string };
+        Update: Partial<Database["public"]["Tables"]["customers"]["Insert"]>;
+        Relationships: [];
+      };
+      orders: {
+        Row: { id: string; reference: string; customer_id: string | null; fulfilment: string; delivery_location: string; order_date: string; pickup_time: string | null; instructions: string; items: Json; subtotal: number; payment_method: string; payment_status: string; status: string; created_at: string };
+        Insert: { id?: string; reference: string; customer_id?: string | null; fulfilment: string; delivery_location?: string; order_date: string; pickup_time?: string | null; instructions?: string; items?: Json; subtotal?: number; payment_method?: string; payment_status?: string; status?: string; created_at?: string };
+        Update: Partial<Database["public"]["Tables"]["orders"]["Insert"]>;
+        Relationships: [];
+      };
+      cake_orders: {
+        Row: { id: string; reference: string; customer_id: string | null; cake_type: string; size: string; tiers: number; number_of_tiers: number; flavour: string; frosting: string | null; colour_theme: string | null; design_notes: string | null; personalised_message: string | null; order_date: string; pickup_time: string | null; fulfilment: string; delivery_location: string | null; additional_instructions: string | null; estimated_total: number; status: string; created_at: string };
+        Insert: { id?: string; reference: string; customer_id?: string | null; cake_type: string; size: string; tiers?: number; number_of_tiers?: number; flavour: string; frosting?: string | null; colour_theme?: string | null; design_notes?: string | null; personalised_message?: string | null; order_date: string; pickup_time?: string | null; fulfilment: string; delivery_location?: string | null; additional_instructions?: string | null; estimated_total: number; status?: string; created_at?: string };
+        Update: Partial<Database["public"]["Tables"]["cake_orders"]["Insert"]>;
+        Relationships: [];
+      };
     }
     Views: {
       [_ in never]: never

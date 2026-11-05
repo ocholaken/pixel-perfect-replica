@@ -10,6 +10,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { MessageCircle } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import pastryCss from "../pastry.css?url";
@@ -19,6 +20,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/store";
 import { SiteLayout } from "../components/site";
 import { Toaster } from "../components/ui/sonner";
+import { AuthProvider } from "../context/AuthContext";
+
+const WHATSAPP_URL = "https://wa.me/254713380906?text=Hello%20Grace%20Patisserie!%20I%20have%20a%20question%20about%20your%20cakes.";
 
 function NotFoundComponent() {
   return (
@@ -140,10 +144,22 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <Toaster position="top-center" richColors closeButton />
-        <SiteLayout><div key={pathname} className="route-transition"><Outlet /></div></SiteLayout>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Toaster position="top-center" richColors closeButton />
+          <SiteLayout><div key={pathname} className="route-transition"><Outlet /></div></SiteLayout>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Chat with Grace Patisserie on WhatsApp"
+            className="fixed bottom-6 right-4 z-50 flex h-14 items-center gap-3 rounded-full bg-[#25D366] pl-4 pr-5 text-white shadow-[0_10px_30px_rgba(37,211,102,.35)] transition duration-300 hover:-translate-y-1 hover:bg-[#20BD5A] hover:shadow-[0_14px_36px_rgba(37,211,102,.42)] sm:right-6"
+          >
+            <MessageCircle className="h-6 w-6 shrink-0" strokeWidth={2.2} aria-hidden="true" />
+            <span className="hidden whitespace-nowrap text-sm font-semibold tracking-wide sm:inline">Chat with us</span>
+          </a>
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

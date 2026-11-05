@@ -1,8 +1,92 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { CakeSlice, Gift, HeartHandshake, Sparkles, Truck } from "lucide-react";
-import { useCart, useProducts } from "../lib/store";
-import { Reveal } from "../components/motion";
-import { useEffect, useState } from "react";
-export const Route=createFileRoute("/")({component:Index});
-function Testimonials(){const testimonials=["Beautiful presentation and wonderfully fresh. The finished cake made our celebration feel extra special.","A thoughtful consultation, clear communication and a stunning custom design.","Elegantly packaged and delivered exactly when promised. We would order again."];const [active,setActive]=useState(0);useEffect(()=>{const timer=window.setInterval(()=>setActive(value=>(value+1)%testimonials.length),5200);return()=>window.clearInterval(timer)},[testimonials.length]);return <div className="testimonial-slider"><div key={active} className="testimonial-slide"><blockquote>“{testimonials[active]}”</blockquote><footer>— Sample customer</footer><div className="testimonial-dots">{testimonials.map((_,index)=><button key={index} className={index===active?"active":""} aria-label={`Show sample testimonial ${index+1}`} onClick={()=>setActive(index)}/>)}</div></div></div>}
-function Index(){const {add}=useCart();const navigate=useNavigate();const {products}=useProducts();const featured=products;const categories=[{name:"Birthday Cakes",image:"/images/cakes/birthday.jpg"},{name:"Wedding Cakes",image:"/images/cakes/wedding-blush.jpg"},{name:"Graduation Cakes",image:"/images/cakes/graduation.jpg"},{name:"Chocolate Cakes",image:"/images/cakes/chocolate-fudge.jpg"},{name:"Red Velvet Cakes",image:"/images/cakes/red-velvet.jpg"},{name:"Vanilla Cakes",image:"/images/cakes/vanilla-berry.jpg"},{name:"Custom Celebration Cakes",image:"/images/cakes/custom-floral.jpg"},{name:"Cupcakes",image:"/images/cakes/cupcakes.jpg"}];return <><section className="hero"><div className="hero-copy"><div className="hero-kicker">Artistry in every layer</div><h1>Every Celebration Deserves a Beautiful Cake.</h1><p>Handcrafted with love, beautifully designed and freshly baked to make every moment unforgettable.</p><div className="hero-actions"><Link to="/shop" className="btn btn-primary">Shop Our Cakes</Link><Link to="/custom" className="btn btn-light">Create Your Custom Cake</Link></div></div></section><section className="section"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">Customer favourites</span><h2>Featured Cakes</h2><p>Thoughtfully baked, beautifully finished, and ready for your table.</p></div><div className="product-grid">{featured.map(p=><article className="product-card" key={p.slug} role="link" tabIndex={0} onClick={()=>navigate({to:"/product/$slug",params:{slug:String(p.id ?? p.slug)}})} onKeyDown={event=>{if(event.key==="Enter"||event.key===" ")navigate({to:"/product/$slug",params:{slug:String(p.id ?? p.slug)}});}}><img src={p.image_url || p.image} alt={p.name} loading="eager" fetchPriority="high" decoding="async"/><div className="product-info"><span className="eyebrow">{p.category}</span><h3>{p.name}</h3><p>{p.description}</p><div className="price">KES {p.price.toLocaleString()}</div><div className="card-actions" onClick={event=>event.stopPropagation()}><Link className="btn" to="/product/$slug" params={{slug:String(p.id ?? p.slug)}}>View Details</Link><button className="btn btn-primary" onClick={()=>add({slug:p.slug,name:p.name,image:p.image,size:p.sizes[0],flavour:p.flavours[0],price:p.price})}>Add to Cart</button></div></div></article>)}</div></Reveal></section><section className="section section-white"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">Find your occasion</span><h2>Cake Categories</h2></div><div className="category-grid">{categories.map(c=><Link key={c.name} to="/shop" className="category-card" style={{backgroundImage:`linear-gradient(transparent,rgba(74,44,36,.25)),url('${c.image}')`}}><span>{c.name}</span></Link>)}</div></Reveal></section><section id="about" className="section"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">The Grace promise</span><h2>Why Choose Grace Patisserie?</h2></div><div className="feature-grid">{[[CakeSlice,"Freshly Baked Cakes","Each creation is baked to order using trusted recipes, ensuring exceptional freshness and flavour on the day of your celebration."],[Sparkles,"Premium Ingredients","Only carefully selected, quality ingredients are used to achieve refined flavour, exquisite texture and a beautifully finished presentation."],[Gift,"Beautiful Custom Designs","From elegant simplicity to statement-worthy grandeur, every design is tailored to your vision, theme and most meaningful details."],[Truck,"Reliable Delivery","Thoughtful scheduling, secure handling and punctual delivery give you complete confidence that your cake will arrive in pristine condition."],[HeartHandshake,"Personalised Service","From your first brief to the final reveal, our team provides attentive guidance and a seamless, made-for-you experience."]].map(([Icon,title,description])=>{const Item=Icon as typeof CakeSlice;return <div className="feature" key={String(title)}><Item/><h3>{String(title)}</h3><p>{String(description)}</p></div>})}</div></Reveal></section><section className="section section-white"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">Sample testimonials</span><h2>Sweet Words</h2><p>Example customer feedback for design preview — replace with verified reviews.</p></div><Testimonials /></Reveal></section><section className="section"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">From our kitchen</span><h2>How It Works</h2><p>From choosing your cake to receiving it for your celebration, every step is designed to feel simple and personal.</p></div><div className="feature-grid how-it-works"><div className="feature"><span className="process-number">01</span><h3>Choose Your Cake</h3><p>Browse our celebration collection and find the design and flavour for your occasion.</p></div><div className="feature"><span className="process-number">02</span><h3>Personalise Your Order</h3><p>Select your size, flavour and quantity, or share a custom brief for a bespoke design.</p></div><div className="feature"><span className="process-number">03</span><h3>We Bake & Deliver</h3><p>Our team prepares your cake fresh and confirms collection or delivery details.</p></div></div></Reveal></section><section className="section section-white"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">Made for meaningful moments</span><h2>Success Stories</h2><p>Celebration inspiration from Grace Patisserie — every cake is prepared with care for your special day.</p></div><div className="feature-grid success-stories"><div className="feature story-card"><img src="/images/cakes/birthday.jpg" alt="Birthday celebration cake"/><span className="eyebrow">Birthday</span><h3>A joyful first impression</h3><p>A colourful centrepiece made personal with thoughtful details for a memorable celebration.</p></div><div className="feature story-card"><img src="/images/cakes/wedding-blush.jpg" alt="Wedding celebration cake"/><span className="eyebrow">Wedding</span><h3>A day to remember</h3><p>Soft, elegant finishing designed to complement a beautiful wedding celebration.</p></div><div className="feature story-card"><img src="/images/cakes/graduation.jpg" alt="Graduation celebration cake"/><span className="eyebrow">Graduation</span><h3>Celebrating a milestone</h3><p>A polished cake that recognises achievement and brings loved ones together.</p></div></div></Reveal></section><section className="section"><Reveal className="full-reveal"><div className="section-head"><span className="eyebrow">From our kitchen</span><h2>Celebration Gallery</h2></div><div className="category-grid">{products.slice(0,8).map(p=><div key={p.slug} className="category-card" style={{backgroundImage:`url('${p.image}')`}}><span>{p.name}</span></div>)}</div></Reveal></section></>}
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CAKES } from "../data/cakes";
+import { useCart } from "../lib/store";
+
+export const Route = createFileRoute("/")({ component: Home });
+
+function Home() {
+  const [start, setStart] = useState(0);
+  const [fade, setFade] = useState(false);
+  const transitionTimer = useRef<number | null>(null);
+  const [direction, setDirection] = useState(1);
+  const { add } = useCart();
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setFade(true);
+      transitionTimer.current = window.setTimeout(() => {
+        setStart((current) => (current + 3) % CAKES.length);
+        setFade(false);
+      }, 380);
+    }, 6500);
+    return () => {
+      window.clearInterval(timer);
+      if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current);
+    };
+  }, []);
+
+  const move = (direction: number) => {
+    if (fade) return;
+    setFade(true);
+    setDirection(direction > 0 ? 1 : -1);
+    if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current);
+    transitionTimer.current = window.setTimeout(() => {
+      setStart((current) => ((current + direction + CAKES.length) % CAKES.length));
+      setFade(false);
+    }, 380);
+  };
+
+  const showPage = (page: number) => {
+    const nextStart = page * 3;
+    if (nextStart === start || fade) return;
+    setFade(true);
+    setDirection(nextStart > start ? 1 : -1);
+    if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current);
+    transitionTimer.current = window.setTimeout(() => {
+      setStart(nextStart % CAKES.length);
+      setFade(false);
+    }, 380);
+  };
+
+  const featured = [0, 1, 2].map((offset) => CAKES[(start + offset) % CAKES.length]);
+
+  return (
+    <main className="bg-[#FFF8F0] text-[#2B2118]">
+      <section className="relative min-h-[620px] overflow-hidden bg-[#2B2118] sm:min-h-[680px]">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(43,33,24,.96)_0%,rgba(43,33,24,.78)_48%,rgba(43,33,24,.22)_100%),url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1600')] bg-cover bg-[center_35%] sm:bg-center" />
+        <div className="relative mx-auto flex min-h-[620px] max-w-[1200px] items-center px-5 py-16 sm:min-h-[680px] sm:px-8 lg:px-6 lg:py-20">
+          <div className="max-w-2xl text-white">
+            <p className="text-xs font-bold tracking-[0.38em] text-[#D8B875]">THE ELDORET ATELIER</p>
+            <h1 className="mt-6 font-serif text-[42px] leading-[1.08] sm:text-6xl md:text-7xl">Every Celebration Deserves a Beautiful Cake.</h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">Handcrafted with artistry, made fresh, and finished to make every moment unforgettable.</p>
+            <div className="mt-9 flex flex-wrap gap-4"><Link to="/shop" className="rounded-full bg-[#C9A86A] px-7 py-4 text-xs font-bold tracking-[0.16em] text-[#2B2118]">Shop the Collection</Link><Link to="/custom" className="rounded-full border border-white/50 px-7 py-4 text-xs font-bold tracking-[0.16em] text-white">Create Bespoke Cake</Link></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1200px] px-4 py-20">
+        <div className="flex items-end justify-between gap-5">
+          <div><p className="text-[11px] font-bold tracking-[0.32em] text-[#C9A86A]">ATELIER FAVOURITES</p><h2 className="mt-3 font-serif text-4xl md:text-5xl">Featured Cakes</h2><p className="mt-3 text-[#756858]">Handcrafted daily at Grace Patisserie, Eldoret</p></div>
+          <div className="hidden gap-2 sm:flex"><button type="button" aria-label="Previous cakes" onClick={() => move(-3)} className="rounded-full border border-[#D9C39A] bg-white p-3"><ChevronLeft /></button><button type="button" aria-label="Next cakes" onClick={() => move(3)} className="rounded-full border border-[#D9C39A] bg-white p-3"><ChevronRight /></button></div>
+        </div>
+        <div className={`mt-9 grid gap-7 will-change-transform transition-[opacity,transform] duration-[850ms] ease-[cubic-bezier(.22,.61,.36,1)] md:grid-cols-3 ${fade ? direction > 0 ? "-translate-x-3 scale-[0.992] opacity-0" : "translate-x-3 scale-[0.992] opacity-0" : "translate-x-0 scale-100 opacity-100"}`}>
+          {featured.map((cake) => (
+            <article key={cake.id} className="group overflow-hidden rounded-[24px] border border-[#E5D7BB] bg-white shadow-[0_14px_45px_rgba(92,67,35,.08)]">
+              <div className="relative overflow-hidden"><img src={cake.image_url} alt={cake.name} loading="lazy" decoding="async" onError={(event) => { const image = event.currentTarget; if (image.src.endsWith("/images/cakes/hero.jpg")) return; image.src = "/images/cakes/hero.jpg"; }} className="h-[280px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 sm:h-[320px] md:h-[280px]" />{cake.badge && <span className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold ${cake.badge === "Luxury" ? "bg-[#2B2118] text-white" : "bg-[#C9A86A] text-white"}`}>{cake.badge}</span>}</div>
+              <div className="p-6"><p className="text-[10px] font-bold tracking-[0.2em] text-[#C9A86A]">{cake.category.toUpperCase()}</p><h3 className="mt-2 font-serif text-2xl">{cake.name}</h3><p className="mt-2 min-h-12 text-sm leading-6 text-[#756858]">{cake.description}</p><strong className="mt-4 block text-lg">KSh {cake.price.toLocaleString("en-KE")}</strong><div className="mt-5 grid grid-cols-3 gap-2"><Link to="/shop" className="rounded-full border border-[#D9C39A] px-2 py-3 text-center text-xs font-bold">View Details</Link><Link to="/cart" onClick={() => add({ slug: cake.slug, name: cake.name, image: cake.image_url, size: cake.sizes[0], flavour: cake.flavours[0], price: cake.price })} className="rounded-full bg-[#C9A86A] px-2 py-3 text-center text-xs font-bold text-white">Order Now</Link><button type="button" onClick={() => add({ slug: cake.slug, name: cake.name, image: cake.image_url, size: cake.sizes[0], flavour: cake.flavours[0], price: cake.price })} className="rounded-full bg-[#2B2118] px-2 py-3 text-xs font-bold text-white">Add</button></div></div>
+            </article>
+          ))}
+        </div>
+        <div className="mt-7 flex justify-center gap-2">{[0, 1, 2, 3].map((page) => <button key={page} aria-label={`Show cake collection ${page + 1}`} type="button" onClick={() => showPage(page)} className={`h-2 rounded-full transition-all duration-500 ${Math.floor(start / 3) === page ? "w-8 bg-[#C9A86A]" : "w-2 bg-[#D9C39A]"}`} />)}</div>
+      </section>
+
+      <section className="bg-white py-20"><div className="mx-auto max-w-[1200px] px-4"><div className="grid gap-6 md:grid-cols-3">{[
+        ["Freshly Created", "Every cake is prepared fresh for its celebration."],
+        ["Atelier Craft", "Refined finishes, considered details and timeless presentation."],
+        ["Personal Service", "Attentive guidance from your first idea to collection."],
+      ].map(([title, text]) => <div key={title} className="rounded-[22px] border border-[#E5D7BB] bg-[#FFFDF9] p-7"><Sparkles className="text-[#C9A86A]" /><h3 className="mt-4 font-serif text-2xl">{title}</h3><p className="mt-2 text-sm leading-6 text-[#756858]">{text}</p></div>)}</div></div></section>
+    </main>
+  );
+}

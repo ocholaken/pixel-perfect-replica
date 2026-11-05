@@ -21,8 +21,8 @@ export type Database = {
         Relationships: [];
       };
       customers: {
-        Row: { id: string; full_name: string; phone: string; email: string | null; created_at: string };
-        Insert: { id?: string; full_name: string; phone: string; email?: string | null; created_at?: string };
+        Row: { id: string; name: string; full_name: string; phone: string; email: string | null; created_at: string };
+        Insert: { id?: string; name: string; full_name: string; phone: string; email?: string | null; created_at?: string };
         Update: Partial<Database["public"]["Tables"]["customers"]["Insert"]>;
         Relationships: [];
       };

@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { ProtectedRoute } from "../components/auth-route";
+import { useAuth } from "../context/AuthContext";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { BarChart3, Bell, CheckCircle2, Download, LayoutDashboard, Mail, Menu, MessageSquare, PackageCheck, ShoppingBag, Trash2, Users, X, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { isAdmin } from "../lib/admin";
 
 export const Route = createFileRoute("/admin")({ component: Admin });
 
@@ -14,11 +15,13 @@ export const Route = createFileRoute("/admin")({ component: Admin });
 
       function Admin() {
         const navigate = useNavigate();
-        const [orders, setOrders] = useState<Order[]>([]);
-        const [contacts, setContacts] = useState<Contact[]>([]);
+        const { user, loading: authLoading } = useAuth();
+        const [orders, setOrders] = useState<any[]>([]);
+        const [contacts, setContacts] = useState<any[]>([]);
         const [profiles, setProfiles] = useState<Array<{id:string;email:string|null;full_name:string|null;role:string|null;created_at?:string|null}>>([]);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState("");
+        const [reloadKey, setReloadKey] = useState(0);
         const [tab, setTab] = useState<Tab>("Dashboard");
         const [sidebar, setSidebar] = useState(false);
         const [search, setSearch] = useState("");
@@ -28,25 +31,46 @@ export const Route = createFileRoute("/admin")({ component: Admin });
         const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
 
         useEffect(() => {
+          console.log("Admin check - user:", user?.email, "isAdmin:", isAdmin(user?.email));
+          if (!authLoading && (!user || !isAdmin(user.email))) navigate({ to: "/account" });
+        }, [authLoading, navigate, user?.email]);
+
+        useEffect(() => {
           const load = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) { navigate({ to: "/" }); return; }
+            if (!user) return;
+            console.log("[Admin] Authenticated user email:", user.email?.toLowerCase().trim());
             setAdminEmail(user.email ?? "");
-            const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-            if (profile?.role !== "admin") { toast.error("Admin only"); navigate({ to: "/" }); return; }
-            const [orderResult, contactResult, profileResult] = await Promise.all([
+            const [orderResult, messageResult, profileResult] = await Promise.all([
               supabase.from("orders").select("*").order("created_at",{ascending:false}),
-              supabase.from("contacts").select("*").order("created_at",{ascending:false}),
+              supabase.from("messages").select("*").order("created_at",{ascending:false}),
               supabase.from("profiles").select("id,email,full_name,role,created_at").order("created_at",{ascending:false}),
             ]);
             setOrders((orderResult.data ?? []) as Order[]);
-            setContacts((contactResult.data ?? []) as Contact[]);
+            setContacts(((Array.isArray(messageResult.data) ? messageResult.data : []) as any[]).map((message) => ({
+              id: message.id,
+              name: message.name ?? "Atelier guest",
+              email: message.email ?? "No email",
+              message: message.message ?? "",
+              type: "contact",
+              created_at: message.created_at ?? new Date().toISOString(),
+              read: message.status === "read",
+            })));
             setProfiles((profileResult.data ?? []) as Array<{id:string;email:string|null;full_name:string|null;role:string|null;created_at?:string|null}>);
-            setError(orderResult.error?.message || contactResult.error?.message || profileResult.error?.message || "");
+            if (orderResult.error) console.log("Orders error:", orderResult.error.message);
+            if (messageResult.error) console.log("Messages error:", messageResult.error.message);
+            setError(orderResult.error?.message || messageResult.error?.message || profileResult.error?.message || "");
             setLoading(false);
           };
-          load();
-        }, [navigate]);
+          if (authLoading) return;
+          if (!user) return;
+          if (!isAdmin(user.email)) return;
+          void load().catch((caught: unknown) => {
+            console.error("Admin dashboard load failed:", caught);
+            setOrders([]); setContacts([]); setProfiles([]);
+            setError(caught instanceof Error ? caught.message : "The admin dashboard could not be loaded.");
+            setLoading(false);
+          });
+        }, [authLoading, navigate, reloadKey, user?.email]);
 
         const currency = (value:number) => `KES ${Number(value || 0).toLocaleString()}`;
         const orderName = (order:Order) => order.cake_name || order.items?.[0]?.name || "Atelier Cake";
@@ -70,9 +94,23 @@ export const Route = createFileRoute("/admin")({ component: Admin });
           return [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([name,value])=>({name,value}));
         },[orders]);
         const filteredOrders = orders.filter(order => {
-          const haystack = `${orderEmail(order)} ${orderName(order)} ${orderType(order)} ${order.reference || ""}`.toLower();
-          return haystack.includes(search.toLower().trim()) && (statusFilter==="all" || order.status===statusFilter);
+          const haystack = [
+            String(orderEmail(order) ?? ""),
+            String(orderName(order) ?? ""),
+            String(orderType(order) ?? ""),
+            String(order.reference ?? ""),
+          ].join(" ").toLowerCase();
+          const query = String(search ?? "").trim().toLowerCase();
+          return haystack.includes(query) && (statusFilter==="all" || order.status===statusFilter);
         }).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+
+        if (authLoading || (!user && loading)) {
+          return <main className="min-h-screen bg-[#FFF8F0] grid place-items-center text-[#756858]"><div className="text-center"><div className="mx-auto h-9 w-9 animate-spin rounded-full border-2 border-[#C9A86A] border-t-transparent"/><p className="mt-4">Preparing your atelier...</p></div></main>;
+        }
+        if (!user) return <div className="min-h-screen bg-[#FFF8F0] grid place-items-center">Please login</div>;
+        if (error && loading === false) {
+          return <main className="min-h-screen bg-[#FFF8F0] grid place-items-center px-5"><div className="max-w-lg rounded-[24px] border border-red-200 bg-white p-8 text-center shadow-lg"><h1 className="font-serif text-2xl text-[#2B2118]">The dashboard could not be loaded</h1><p className="mt-3 break-words text-sm text-red-700">{error}</p><button onClick={() => { setError(""); setLoading(true); setReloadKey((value) => value + 1); }} className="mt-6 rounded-full bg-[#2B2118] px-6 py-3 text-sm font-bold text-white">Try Again</button></div></main>;
+        }
 
         const updateStatus = async (id:string,status:string) => {
           const previous=orders;
@@ -83,11 +121,11 @@ export const Route = createFileRoute("/admin")({ component: Admin });
         };
         const setContactRead = async (id:string,read:boolean) => {
           setContacts(current=>current.map(contact=>contact.id===id?{...contact,read}:contact));
-          const {error:updateError}=await supabase.from("contacts").update({read}).eq("id",id);
+          const {error:updateError}=await supabase.from("messages").update({status: read ? "read" : "unread"}).eq("id",id);
           if(updateError){toast.error("Message status could not be updated.");}
         };
         const deleteContact = async (id:string) => {
-          const {error:deleteError}=await supabase.from("contacts").delete().eq("id",id);
+          const {error:deleteError}=await supabase.from("messages").delete().eq("id",id);
           if(deleteError){toast.error("Message could not be deleted.");return;}
           setContacts(current=>current.filter(contact=>contact.id!==id));toast.success("Message removed");
         };
@@ -109,7 +147,7 @@ export const Route = createFileRoute("/admin")({ component: Admin });
         </div>;
 
         const MessagesView=()=> <div className="rounded-[24px] border border-[#e8d5b5] bg-white p-4 shadow-[0_20px_60px_rgba(201,168,106,.12)] sm:p-6"><div className="flex items-center justify-between"><div><p className="font-serif text-2xl">Atelier Messages</p><p className="text-sm text-black/50">{unread} unread</p></div><Bell className={unread?"text-[#c9a86a]":"text-black/30"} size={22}/></div>{contacts.length===0?<p className="py-16 text-center text-black/50">No messages yet - your guests will appear here.</p>:<div className="mt-6 space-y-3">{contacts.map(contact=><article key={contact.id} className={`min-w-0 rounded-[18px] border p-4 ${contact.read?"border-[#e8d5b5]":"border-[#c9a86a] bg-[#fefaf3]"}`}><div className="flex flex-col gap-3 sm:flex-row sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><strong>{contact.name}</strong><span className={`text-xs ${contact.read?"text-black/40":"text-[#c9a86a]"}`}>{contact.read?"Read":"Unread"}</span></div><p className="break-all text-sm text-black/50">{contact.email}</p></div><div className="flex shrink-0 gap-2"><button onClick={()=>setContactRead(contact.id,!contact.read)} className="rounded-full border border-[#e8d5b5] px-3 py-2 text-xs">{contact.read?"Mark unread":"Mark read"}</button><button onClick={()=>deleteContact(contact.id)} aria-label="Delete message" className="grid h-9 w-9 place-items-center rounded-full bg-red-50 text-red-500"><Trash2 size={16}/></button></div></div><button className="mt-3 max-w-full text-left text-sm leading-6 break-words" onClick={()=>setExpandedMessage(expandedMessage===contact.id?null:contact.id)}>{expandedMessage===contact.id?contact.message:contact.message.length>120?`${contact.message.slice(0,120)}…`:`${contact.message}`}</button><p className="mt-2 text-xs text-black/40">{new Date(contact.created_at).toLocaleString()}</p></article>)}</div>}</div>;
-        return <ProtectedRoute><div className="min-h-screen bg-[#fefaf3] text-black">
+        return <div className="min-h-screen bg-[#fefaf3] text-black">
           {sidebar&&<button aria-label="Close menu" className="fixed inset-0 z-40 bg-black/20 lg:hidden" onClick={()=>setSidebar(false)}/>}
           <aside className={`fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col border-r border-[#e8d5b5] bg-white p-5 transition-transform lg:translate-x-0 ${sidebar?"translate-x-0":"-translate-x-full"}`}><div className="flex items-center justify-between"><div><p className="font-serif text-xl">Grace</p><p className="text-[10px] tracking-[.35em] text-[#c9a86a]">PATISSERIE</p></div><button className="lg:hidden" onClick={()=>setSidebar(false)}><X size={20}/></button></div><nav className="mt-10 space-y-2">{nav.map(item=><button key={item.name} onClick={()=>{setTab(item.name);setSidebar(false);}} className={`flex w-full items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold transition-colors ${tab===item.name?"bg-[#c9a86a] text-white":"text-black/60 hover:bg-[#fefaf3]"}`}><item.icon size={18}/>{item.name}{item.name==="Messages"&&unread>0&&<span className="ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] text-[#c9a86a]">{unread}</span>}</button>)}</nav><p className="mt-auto text-center text-xs text-black/35">Atelier Command</p></aside>
           <div className="min-w-0 lg:pl-[250px]"><header className="sticky top-0 z-30 flex min-h-[88px] items-center justify-between gap-3 border-b border-[#e8d5b5] bg-[#fefaf3]/95 px-4 backdrop-blur md:px-8"><div className="flex min-w-0 items-center gap-3"><button className="shrink-0 lg:hidden" onClick={()=>setSidebar(true)} aria-label="Open menu"><Menu/></button><div className="min-w-0"><h1 className="font-serif text-xl sm:text-3xl">Atelier Command</h1><p className="truncate text-xs text-black/45">{new Date().toLocaleDateString("en",{weekday:"long",month:"long",day:"numeric"})}</p></div></div><div className="flex shrink-0 items-center gap-2"><span className="hidden max-w-[180px] truncate text-xs text-black/60 sm:block">{adminEmail}</span><button onClick={downloadCSV} className="hidden rounded-full bg-[#c9a86a] px-4 py-2.5 text-xs font-semibold text-white sm:block"><Download className="inline mr-2" size={15}/>Download Report</button></div></header>
@@ -125,5 +163,5 @@ export const Route = createFileRoute("/admin")({ component: Admin });
             {tab==="Reports"&&<section className="rounded-[24px] border border-[#e8d5b5] bg-white p-5 shadow-[0_20px_60px_rgba(201,168,106,.12)] sm:p-6"><p className="font-serif text-2xl">Atelier Reports</p><div className="mt-5 flex flex-wrap gap-2"><select value={dateRange} onChange={e=>setDateRange(e.target.value)} className="rounded-full border border-[#e8d5b5] px-4 py-2.5"><option value="month">This Month</option><option value="last">Last Month</option></select><button onClick={downloadCSV} className="rounded-full bg-[#c9a86a] px-5 py-2.5 text-sm font-semibold text-white">Download CSV</button></div></section>}
             {tab==="Analytics"&&<OrdersView/>}
           </main></div>
-        </div></ProtectedRoute>;
+        </div>;
 }

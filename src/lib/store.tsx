@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "./supabaseClient";
+import { CAKES } from "../data/cakes";
 
-export type Product = { id?: string; slug: string; name: string; category: string; price: number; image: string; image_url?: string; color_theme?: string; description: string; flavours: string[]; sizes: string[]; active?: boolean; is_active?: boolean };
+export type Product = { id?: string; slug: string; name: string; category: string; price: number; image: string; image_url?: string; color_theme?: string; description: string; flavours: string[]; sizes: string[]; sweetness?: string; frosting?: string; active?: boolean; is_active?: boolean };
 
 const cakeImageUrls: Record<string, string> = {
   "/images/cakes/birthday.jpg": "/images/cakes/birthday.jpg",
@@ -28,7 +29,13 @@ export function useProducts() {
       .select("*")
       .then(({ data, error: queryError }) => {
         if (!active) return;
-        const visible = (data ?? [])
+        const source = data && data.length > 0 ? data : CAKES.map((cake) => ({
+          ...cake,
+          image: cake.image_url,
+          category: cake.category === "Chocolate" ? "Chocolate Lovers" : cake.category,
+          active: true,
+        }));
+        const visible = source
           .map((product) => {
             const record = product as Product;
             const resolvedImage = record.image_url || cakeImageUrls[record.image] || record.image;

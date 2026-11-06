@@ -113,8 +113,8 @@ function SignUp() {
 
       sessionStorage.setItem("pendingEmail", cleanEmail);
       sessionStorage.setItem("pendingName", cleanName);
-      toast.success("Verification code sent to your email.");
-      navigate({ to: "/verify-otp", search: { type: "signup" } });
+      toast.success("Account created! Please login.");
+      navigate({ to: "/login", search: { created: true } });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
       setAuthNotice({ kind: "error", message: `Error: ${message}` });

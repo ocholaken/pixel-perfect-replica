@@ -22,7 +22,6 @@ import { Route as MenuRouteImport } from './routes/menu'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
 import { Route as AdminMessagesRouteImport } from './routes/admin/messages'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
@@ -92,11 +91,6 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VerifyOtpRoute = VerifyOtpRouteImport.update({
-  id: '/verify-otp',
-  path: '/verify-otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminMessagesRoute = AdminMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -127,7 +121,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/signup': typeof SignupRoute
-  '/verify-otp': typeof VerifyOtpRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -146,7 +139,6 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/signup': typeof SignupRoute
-  '/verify-otp': typeof VerifyOtpRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -166,7 +158,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/signup': typeof SignupRoute
-  '/verify-otp': typeof VerifyOtpRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -187,7 +178,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/signup'
-    | '/verify-otp'
     | '/admin/messages'
     | '/admin/orders'
     | '/product/$slug'
@@ -206,7 +196,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/signup'
-    | '/verify-otp'
     | '/admin/messages'
     | '/admin/orders'
     | '/product/$slug'
@@ -225,7 +214,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/signup'
-    | '/verify-otp'
     | '/admin/messages'
     | '/admin/orders'
     | '/product/$slug'
@@ -245,7 +233,6 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
   SignupRoute: typeof SignupRoute
-  VerifyOtpRoute: typeof VerifyOtpRoute
   ProductSlugRoute: typeof ProductSlugRoute
 }
 
@@ -342,13 +329,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/verify-otp': {
-      id: '/verify-otp'
-      path: '/verify-otp'
-      fullPath: '/verify-otp'
-      preLoaderRoute: typeof VerifyOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/messages': {
       id: '/admin/messages'
       path: '/messages'
@@ -399,7 +379,6 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
   SignupRoute: SignupRoute,
-  VerifyOtpRoute: VerifyOtpRoute,
   ProductSlugRoute: ProductSlugRoute,
 }
 export const routeTree = rootRouteImport

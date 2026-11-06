@@ -16,7 +16,8 @@ export function Account() {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState<string>("");
   const [loginSuccess, setLoginSuccess] = useState("");
-  const search = location.search as { verified?: boolean | string; exists?: boolean | string; reset?: boolean | string };
+  const search = location.search as { verified?: boolean | string; exists?: boolean | string; reset?: boolean | string; created?: boolean | string };
+  const created = search.created === true || search.created === "true";
 
   useEffect(() => {
     if (search.verified !== true && search.verified !== "true") return;
@@ -96,6 +97,7 @@ export function Account() {
         {(search.exists === true || search.exists === "true") && <div className="mt-6 rounded-[14px] border border-[#e8d5b5] bg-[#fefaf3] px-4 py-3 text-center text-sm font-medium text-black" role="status">This email already has an account. Please login.</div>}
         {(search.reset === true || search.reset === "true") && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">Password reset successfully. Please login.</div>}
         {signupSuccess && <div className="mt-6 rounded-[14px] border border-[#e8d5b5] bg-[#fefaf3] px-4 py-3 text-center text-sm font-medium text-black" role="status">Account created successfully. You can now sign in.</div>}
+        {created && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">Account created! Please login.</div>}
         {loginSuccess && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">{loginSuccess}</div>}
         {authError && <div className="mt-6 rounded-[14px] border border-[#e8d5b5] bg-[#fefaf3] px-4 py-3 text-center text-sm text-black" role="alert">{authError}</div>}
         {authError && <Link to="/signup" className="block mt-3 text-center text-[13px] font-medium text-[#c9a86a] underline underline-offset-4">Create new atelier account</Link>}

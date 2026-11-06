@@ -16,7 +16,7 @@ import appCss from "../styles.css?url";
 import pastryCss from "../pastry.css?url";
 import customAccessibilityCss from "../custom-accessibility.css?url";
 import shopLuxuryCss from "../shop-luxury.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import { reportRuntimeError } from "../lib/runtime-error-reporting";
 import { CartProvider } from "../lib/store";
 import { SiteLayout } from "../components/site";
 import { Toaster } from "../components/ui/sonner";
@@ -50,7 +50,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportRuntimeError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
@@ -89,16 +89,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Grace Patisserie | Beautiful Cakes for Every Celebration" },
+      { title: "Grace Patisserie | Cakes in Nairobi" },
             { name: "description", content: "Handcrafted celebration cakes, custom designs and cupcakes from Grace Patisserie." },
       { name: "author", content: "Grace Patisserie" },
-      { property: "og:title", content: "Grace Patisserie | Beautiful Cakes for Every Celebration" },
+      { property: "og:title", content: "Grace Patisserie | Cakes in Nairobi" },
       { property: "og:description", content: "Handcrafted celebration cakes, custom designs and cupcakes from Grace Patisserie." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@GracePatisserie" },
     ],
     links: [
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+      },
       {
         rel: "stylesheet",
         href: appCss,

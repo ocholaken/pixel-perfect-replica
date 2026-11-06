@@ -58,7 +58,7 @@ function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(43,33,24,.96)_0%,rgba(43,33,24,.78)_48%,rgba(43,33,24,.22)_100%),url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1600')] bg-cover bg-[center_35%] sm:bg-center" />
         <div className="relative mx-auto flex min-h-[620px] max-w-[1200px] items-center px-5 py-16 sm:min-h-[680px] sm:px-8 lg:px-6 lg:py-20">
           <div className="max-w-2xl text-white">
-            <p className="text-xs font-bold tracking-[0.38em] text-[#D8B875]">THE ELDORET ATELIER</p>
+            <p className="text-xs font-bold tracking-[0.38em] text-[#D8B875]">THE SIAYA COUNTY, GEM, YALA ATELIER</p>
             <h1 className="mt-6 font-serif text-[42px] leading-[1.08] sm:text-6xl md:text-7xl">Every Celebration Deserves a Beautiful Cake.</h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">Handcrafted with artistry, made fresh, and finished to make every moment unforgettable.</p>
             <div className="mt-9 flex flex-wrap gap-4"><Link to="/shop" className="rounded-full bg-[#C9A86A] px-7 py-4 text-xs font-bold tracking-[0.16em] text-[#2B2118]">Shop the Collection</Link><Link to="/custom" className="rounded-full border border-white/50 px-7 py-4 text-xs font-bold tracking-[0.16em] text-white">Create Bespoke Cake</Link></div>
@@ -68,7 +68,7 @@ function Home() {
 
       <section className="mx-auto max-w-[1200px] px-4 py-20">
         <div className="flex items-end justify-between gap-5">
-          <div><p className="text-[11px] font-bold tracking-[0.32em] text-[#C9A86A]">ATELIER FAVOURITES</p><h2 className="mt-3 font-serif text-4xl md:text-5xl">Featured Cakes</h2><p className="mt-3 text-[#756858]">Handcrafted daily at Grace Patisserie, Eldoret</p></div>
+          <div><p className="text-[11px] font-bold tracking-[0.32em] text-[#C9A86A]">ATELIER FAVOURITES</p><h2 className="mt-3 font-serif text-4xl md:text-5xl">Featured Cakes</h2><p className="mt-3 text-[#756858]">Handcrafted daily at Grace Patisserie, Siaya County, Gem, Yala</p></div>
           <div className="hidden gap-2 sm:flex"><button type="button" aria-label="Previous cakes" onClick={() => move(-3)} className="rounded-full border border-[#D9C39A] bg-white p-3"><ChevronLeft /></button><button type="button" aria-label="Next cakes" onClick={() => move(3)} className="rounded-full border border-[#D9C39A] bg-white p-3"><ChevronRight /></button></div>
         </div>
         <div className={`mt-9 grid gap-7 will-change-transform transition-[opacity,transform] duration-[850ms] ease-[cubic-bezier(.22,.61,.36,1)] md:grid-cols-3 ${fade ? direction > 0 ? "-translate-x-3 scale-[0.992] opacity-0" : "translate-x-3 scale-[0.992] opacity-0" : "translate-x-0 scale-100 opacity-100"}`}>

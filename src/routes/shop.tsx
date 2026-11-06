@@ -31,8 +31,8 @@ function Shop() {
   const categories = ["Signature", "Chocolate", "Fruit & Fresh", "Luxury", "Classic"] as const;
 
   return (
-    <main className="min-h-screen bg-[#FFF8F0] px-4 py-12 text-[#2B2118]">
-      <div className="mx-auto max-w-[1200px]">
+    <main className="min-h-screen w-full overflow-hidden bg-[#FDFBF7] px-4 py-12 text-[#2B2118]">
+      <div className="mx-auto w-full max-w-7xl px-4">
         <header className="text-center">
           <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">THE ATELIER COLLECTION</p>
           <h1 className="mt-4 font-serif text-5xl text-[#2B2118] md:text-6xl">Shop Cakes</h1>
@@ -103,23 +103,24 @@ function Shop() {
 
 function CakeGrid({ cakes, openCake, addCake }: { cakes: typeof CAKES; openCake: (cake: typeof CAKES[number]) => void; addCake: (cake: typeof CAKES[number], amount?: number) => void }) {
   return (
-    <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-8 grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
       {cakes.map((cake) => (
-        <article key={cake.id} className="group overflow-hidden rounded-[24px] border border-[#E5D7BB] bg-white shadow-[0_12px_40px_rgba(92,67,35,.08)] transition duration-300 hover:-translate-y-2">
-          <button type="button" onClick={() => openCake(cake)} className="relative block w-full overflow-hidden">
+        <article key={cake.id} className="group flex min-w-0 flex-col overflow-hidden rounded-[24px] border border-[#E5D7BB] bg-white shadow-[0_12px_40px_rgba(92,67,35,.08)] transition duration-300 hover:-translate-y-2 hover:border-[#C9A227] hover:shadow-xl">
+          <button type="button" onClick={() => openCake(cake)} className="relative block h-[280px] w-full overflow-hidden">
             {cake.badge && <span className={`absolute left-4 top-4 z-10 rounded-full px-3 py-1 text-[10px] font-bold tracking-wider ${cake.badge === "Luxury" ? "bg-[#2B2118] text-white" : "bg-[#C9A86A] text-white"}`}>{cake.badge}</span>}
-            <img src={cake.image_url} alt={cake.name} onError={(event) => { const image = event.currentTarget; if (image.src.endsWith("/images/cakes/hero.jpg")) return; image.src = "/images/cakes/hero.jpg"; }} className="h-[280px] w-full object-cover transition duration-700 group-hover:scale-105" />
+            <div className="h-[280px] w-full overflow-hidden bg-[#F5EFE6]">
+              <img src={cake.image_url} alt={cake.name} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" onError={(e)=>{e.currentTarget.src='https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80'}} />
+            </div>
           </button>
-          <div className="p-6">
-            <p className="text-[10px] font-bold tracking-[0.18em] text-[#C9A86A]">{cake.category.toUpperCase()}</p>
+          <div className="flex flex-1 flex-col p-6">
+            <p className="text-[10px] font-bold tracking-widest text-[#C9A227]">LUXURY</p>
             <button type="button" onClick={() => openCake(cake)} className="mt-2 text-left font-serif text-2xl">{cake.name}</button>
-            <p className="mt-2 min-h-12 text-sm leading-6 text-[#756858]">{cake.description}</p>
+            <p className="mt-2 line-clamp-2 min-h-12 text-sm leading-6 text-[#756858]">{cake.description}</p>
             <p className="mt-3 text-xs font-bold text-[#9A8060]">{cake.flavours.join(" · ")}</p>
-            <p className="mt-2 text-xs text-[#756858]"><strong>Sweetness:</strong> {cake.sweetness} · {cake.frosting}</p>
-            <strong className="mt-4 block text-lg">KSh {cake.price.toLocaleString("en-KE")}</strong>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => addCake(cake)} className="rounded-full bg-[#2B2118] px-3 py-3 text-xs font-bold text-white">Add to Cart</button>
-              <Link to="/cart" onClick={() => addCake(cake)} className="rounded-full bg-[#C9A86A] px-3 py-3 text-center text-xs font-bold text-white">Order Now</Link>
+            <strong className="mt-auto pt-4 block text-lg text-[#C9A227]">KSh {cake.price.toLocaleString("en-KE")}</strong>
+            <div className="mt-5 grid w-full grid-cols-2 gap-3">
+              <button type="button" onClick={() => addCake(cake)} className="min-w-0 rounded-full bg-[#2B2118] px-3 py-3 text-xs font-bold text-white">Add to Cart</button>
+              <Link to="/cart" onClick={() => addCake(cake)} className="min-w-0 rounded-full bg-[#C9A227] px-3 py-3 text-center text-xs font-bold text-white">Order Now</Link>
             </div>
           </div>
         </article>

@@ -57,7 +57,7 @@ export function FooterContact() {
   };
 
   const contactCards = [
-    { icon: MapPin, title: "Our Atelier", content: "Eldoret, Rift Valley, Kenya" },
+    { icon: MapPin, title: "Our Atelier", content: "Siaya County, Gem, Yala, Kenya" },
     { icon: Phone, title: "Call Us", content: "0713 380 906", href: "tel:+254713380906" },
     { icon: Mail, title: "Email Us", content: "hello@gracepatisserie.co.ke", href: "mailto:hello@gracepatisserie.co.ke" },
     { icon: Clock3, title: "Atelier Hours", content: "Mon - Sat: 8:00 AM - 8:00 PM | Sun: 10:00 AM - 6:00 PM" },
@@ -70,7 +70,7 @@ export function FooterContact() {
         <div className="mb-14 flex items-center gap-4 text-[#C9A86A]"><span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9A86A]" /><span className="whitespace-nowrap text-xs tracking-[0.3em]">✦ GRACE PATISSERIE ✦</span><span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9A86A]" /></div>
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <p className="text-xs tracking-[0.3em] text-[#C9A86A]">GRACE PATISSERIE • ELDORET ATELIER</p>
+            <p className="text-xs tracking-[0.3em] text-[#C9A86A]">GRACE PATISSERIE • SIAYA COUNTY, GEM, YALA ATELIER</p>
             <h2 className="mt-5 font-serif text-4xl leading-tight md:text-5xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Let's Create Something Unforgettable</h2>
             <div className="mt-7 flex items-center gap-3 text-[#C9A86A]"><span className="h-px w-[60px] bg-[#C9A86A]" /><span>✦</span></div>
             <p className="mt-6 max-w-xl leading-7 text-[#D6C7B0]">Every cake is a work of art. Visit our atelier, call us, or send a message below. Our master bakers reply within 1 hour during working hours.</p>
@@ -81,7 +81,7 @@ export function FooterContact() {
               })}
             </div>
             <div className="mt-7 flex flex-wrap gap-2 text-xs text-[#D6C7B0]">
-              {[{ icon: ShieldCheck, label: "Trusted Atelier" }, { icon: Star, label: "4.9 Rated" }, { icon: Truck, label: "Same-Day Delivery in Eldoret" }].map(({ icon: Icon, label }) => <span key={label} className="flex items-center gap-2 rounded-full border border-[#C9A86A]/20 px-3 py-2"><Icon size={15} className="text-[#C9A86A]" />{label}</span>)}
+              {[{ icon: ShieldCheck, label: "Trusted Atelier" }, { icon: Star, label: "4.9 Rated" }, { icon: Truck, label: "Same-Day Delivery in Siaya County, Gem, Yala" }].map(({ icon: Icon, label }) => <span key={label} className="flex items-center gap-2 rounded-full border border-[#C9A86A]/20 px-3 py-2"><Icon size={15} className="text-[#C9A86A]" />{label}</span>)}
             </div>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="mt-7 inline-flex h-12 items-center justify-center rounded-full border border-[#C9A86A] px-7 text-sm font-semibold text-[#E5C989] transition hover:bg-[#C9A86A] hover:text-[#1A120B]">Chat on WhatsApp</a>
           </div>

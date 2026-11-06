@@ -131,7 +131,7 @@ function Custom() {
                 <div className="mt-3 grid grid-cols-2 gap-2">{["Delivery", "Collection"].map((item) => <button key={item} type="button" onClick={() => setFulfilment(item)} className={`rounded-xl border px-3 py-3 text-sm font-semibold ${fulfilment === item ? "border-[#C9A86A] bg-[#FFF3D8] text-[#80601F]" : "border-[#E8D7B5]"}`}>{item}</button>)}</div>
               </fieldset>
 
-              {fulfilment === "Delivery" && <div className="mt-5"><Field label="Delivery location" icon={<MapPin size={17}/>}><input name="location" placeholder="Eldoret delivery address"/></Field></div>}
+              {fulfilment === "Delivery" && <div className="mt-5"><Field label="Delivery location" icon={<MapPin size={17}/>}><input name="location" placeholder="Siaya County, Gem, Yala delivery address"/></Field></div>}
               <div className="mt-5"><Field label="Additional instructions"><textarea name="instructions" rows={3} placeholder="Dietary needs, delivery notes or anything else our atelier should know"/></Field></div>
 
               <div className="mt-7 flex flex-col gap-3 border-t border-[#EEE4D4] pt-6 sm:flex-row sm:items-center sm:justify-between">

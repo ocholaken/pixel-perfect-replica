@@ -27,12 +27,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(null);
       return;
     }
-    const { data } = await supabase
-      .from("profiles")
-      .select("role, full_name")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-    setProfile(data);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("role, full_name")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+      if (error) throw error;
+      setProfile(data);
+    } catch (error) {
+      console.error("Unable to load profile", error);
+      setProfile(null);
+    }
   };
 
   useEffect(() => {

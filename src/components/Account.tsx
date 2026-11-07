@@ -55,8 +55,20 @@ export function Account() {
       }
 
       const { data: profile } = await supabase.from("profiles").select("role, full_name").eq("id", authData.user.id).maybeSingle();
-      toast.success("Welcome back!");
-      setLoginSuccess("Login successful! Redirecting...");
+      const pendingEmail = sessionStorage.getItem("pendingEmail")?.trim().toLowerCase();
+      const firstSweetSerenityLogin = pendingEmail === email;
+      if (firstSweetSerenityLogin) {
+        sessionStorage.setItem("ss-login-greeting", "first");
+        sessionStorage.removeItem("pendingEmail");
+        sessionStorage.removeItem("pendingName");
+      } else {
+        sessionStorage.setItem("ss-login-greeting", "returning");
+      }
+      const welcomeMessage = firstSweetSerenityLogin
+        ? `Welcome to Sweet Serenity${profile?.full_name ? `, ${profile.full_name.split(/\s+/)[0]}` : ""}!`
+        : "Welcome back to Sweet Serenity!";
+      toast.success(welcomeMessage);
+      setLoginSuccess(`${welcomeMessage} Redirecting to your atelier...`);
       document.body.style.opacity = "1";
       window.setTimeout(() => {
         document.body.style.opacity = "0";
@@ -89,11 +101,11 @@ export function Account() {
       <div className="absolute bottom-[20%] left-[10%] w-32 h-32 rounded-full bg-[#f9e8c9] border border-[#c9a86a]/20" />
 
       <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} onSubmit={signIn} className="relative w-full max-w-[480px] bg-[#fffffe]/95 backdrop-blur-xl border border-[#e8d5b5] border-t-[3px] border-t-[#c9a86a] rounded-[32px] shadow-[0_25px_80px_rgba(201,168,106,0.18)] p-8 md:p-10">
-        <p className="text-center text-[11px] tracking-[0.4em] text-[#c9a86a] font-semibold mb-6">GRACE PATISSERIE</p>
+        <p className="text-center text-[11px] tracking-[0.4em] text-[#c9a86a] font-semibold mb-6">SWEET SERENITY</p>
         <h1 className="font-serif text-[42px] font-normal text-black text-center leading-none tracking-tight">Welcome Back</h1>
         <p className="text-center text-[14px] text-[#6b6b6b] mt-3">Sign in to your sweet sanctuary</p>
         <div className="mx-auto mt-5 w-16 h-[1px] bg-[#c9a86a]/50" />
-        {(search.verified === true || search.verified === "true") && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">Account verified! Welcome to Grace's!</div>}
+        {(search.verified === true || search.verified === "true") && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">Account verified! Welcome to Sweet Serenity.</div>}
         {(search.exists === true || search.exists === "true") && <div className="mt-6 rounded-[14px] border border-[#e8d5b5] bg-[#fefaf3] px-4 py-3 text-center text-sm font-medium text-black" role="status">This email already has an account. Please login.</div>}
         {(search.reset === true || search.reset === "true") && <div className="mt-6 rounded-[14px] border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700" role="status">Password reset successfully. Please login.</div>}
         {signupSuccess && <div className="mt-6 rounded-[14px] border border-[#e8d5b5] bg-[#fefaf3] px-4 py-3 text-center text-sm font-medium text-black" role="status">Account created successfully. You can now sign in.</div>}
@@ -120,7 +132,7 @@ export function Account() {
           </div>
           <button type="submit" disabled={loading} className="w-full bg-gradient-to-b from-[#d4b77a] to-[#c9a86a] hover:from-[#c9a86a] hover:to-[#b8955a] text-white font-serif text-[15px] tracking-[0.15em] py-[15px] rounded-[14px] shadow-[0_10px_25px_rgba(201,168,106,0.35)] transition-all duration-300 hover:-translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70">{loading ? "SIGNING IN..." : "SIGN IN"}</button>
           <div className="flex items-center gap-4 py-2"><div className="h-[1px] flex-1 bg-[#e8d5b5]" /><span className="text-[12px] tracking-widest text-gray-400">OR</span><div className="h-[1px] flex-1 bg-[#e8d5b5]" /></div>
-          <p className="text-center text-[14px] text-black"><span className="font-medium">New to Grace?</span><br /><Link to="/signup" className="font-medium text-[#c9a86a] underline decoration-[#c9a86a] underline-offset-4">Create an account</Link></p>
+          <p className="text-center text-[14px] text-black"><span className="font-medium">New to Sweet Serenity?</span><br /><Link to="/signup" className="font-medium text-[#c9a86a] underline decoration-[#c9a86a] underline-offset-4">Create an atelier account</Link></p>
         </div>
       </motion.form>
     </main>

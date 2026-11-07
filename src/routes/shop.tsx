@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, ShoppingBag, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { CAKES } from "../data/cakes";
 import { useCart } from "../lib/store";
 
@@ -25,6 +26,7 @@ function Shop() {
 
   const addCake = (cake: (typeof CAKES)[number], amount = 1, size = cake.sizes[0] ?? "Standard") => {
     add({ slug: cake.slug, name: cake.name, image: cake.image_url, size, flavour: cake.flavours[0] ?? "Atelier selection", price: cake.price, quantity: amount });
+    toast.success(`${cake.name} added to your cart`);
   };
 
   const openCake = (cake: (typeof CAKES)[number]) => { setQuantity(1); setSelectedSize(cake.sizes[0] ?? "Standard"); setSelected(cake); };
@@ -34,7 +36,7 @@ function Shop() {
     <main className="min-h-screen w-full overflow-hidden bg-[#FDFBF7] px-4 py-12 text-[#2B2118]">
       <div className="mx-auto w-full max-w-7xl px-4">
         <header className="text-center">
-          <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">THE ATELIER COLLECTION</p>
+          <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">THE SWEET SERENITY COLLECTION</p>
           <h1 className="mt-4 font-serif text-5xl text-[#2B2118] md:text-6xl">Shop Cakes</h1>
           <p className="mt-4 text-[#756858]">Exceptional cakes, handcrafted for life&apos;s finest celebrations.</p>
           <label className="mx-auto mt-8 flex max-w-2xl items-center gap-3 rounded-full border border-[#D9C39A] bg-white px-5 py-4 shadow-[0_12px_35px_rgba(92,67,35,.08)]">

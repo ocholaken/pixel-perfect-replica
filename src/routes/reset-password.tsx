@@ -42,7 +42,7 @@ function ResetPassword() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#fefaf3] p-4">
       <form onSubmit={submit} className="w-full max-w-[480px] rounded-[32px] border border-[#e8d5b5] border-t-[3px] border-t-[#c9a86a] bg-white p-8 shadow-[0_25px_80px_rgba(201,168,106,0.18)] md:p-10">
-        <p className="mb-5 text-center text-[11px] font-semibold tracking-[0.4em] text-[#c9a86a]">GRACE PATISSERIE</p>
+        <p className="mb-5 text-center text-[11px] font-semibold tracking-[0.4em] text-[#c9a86a]">SWEET SERENITY</p>
         <h1 className="text-center font-serif text-[42px] text-black">Reset Password</h1>
         {error && <div className="mt-6 rounded-[14px] border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700" role="alert">{error}</div>}
         <div className="mt-8 space-y-5">

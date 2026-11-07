@@ -4,6 +4,7 @@ import { CakeSlice, CheckCircle, Clock3, Crown, Package, ReceiptText, Sparkles, 
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import { isAdmin } from "../lib/admin";
+import { toast } from "sonner";
 
 type Order = {
   id: string;
@@ -25,8 +26,8 @@ const formatOrderDate = (value?: string | null) => {
 };
 
 const shortReference = (order: Order) => {
-  const reference = order.reference?.replace(/^GP-/, "") || String(order.id).replace(/-/g, "").slice(0, 8);
-  return `GRACE-${reference.toUpperCase()}`;
+  const reference = order.reference?.replace(/^(GP|SS)-/, "") || String(order.id).replace(/-/g, "").slice(0, 8);
+  return `SS-${reference.toUpperCase()}`;
 };
 
 export const Route = createFileRoute("/account")({ component: AccountPage });
@@ -37,6 +38,25 @@ function AccountPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [ordersError, setOrdersError] = useState("");
+  const [loginGreeting, setLoginGreeting] = useState<"first" | "returning" | null>(() => {
+    if (typeof window === "undefined") return null;
+    const greeting = sessionStorage.getItem("ss-login-greeting");
+    return greeting === "first" || greeting === "returning" ? greeting : null;
+  });
+
+  useEffect(() => {
+    if (!loginGreeting) return;
+    if (loginGreeting === "first") {
+      toast.success("Welcome to Sweet Serenity!", {
+        description: "Your atelier account is ready. We are delighted to have you.",
+      });
+    } else {
+      toast.success("Welcome back to Sweet Serenity!", {
+        description: "Your sweet sanctuary is ready.",
+      });
+    }
+    sessionStorage.removeItem("ss-login-greeting");
+  }, [loginGreeting]);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -121,7 +141,7 @@ function AccountPage() {
       ? "Your atelier journey begins. Order your first signature cake."
       : analytics.totalSpent > 20000
         ? "You are in our Top 5% of patrons - Thank you."
-        : "Your celebrations are in good hands. Thank you for choosing Grace Patisserie.";
+        : "Your celebrations are in good hands. Thank you for choosing Sweet Serenity.";
 
   return (
     <main className="min-h-screen bg-[#FFF8F0] px-4 py-10 text-[#2B2118]" style={{ fontFamily: "Inter, sans-serif" }}>
@@ -130,8 +150,8 @@ function AccountPage() {
           <div className="absolute right-0 top-0 h-full w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(201,168,106,.22),transparent_68%)]" />
           <div className="relative flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">GRACE PATISSERIE - ATELIER MEMBER</p>
-              <h1 className="mt-4 font-serif text-4xl leading-tight text-[#2B2118] md:text-5xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Welcome back, {firstName}</h1>
+              <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">SWEET SERENITY - ATELIER MEMBER</p>
+              <h1 className="mt-4 font-serif text-4xl leading-tight text-[#2B2118] md:text-5xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>{loginGreeting === "first" ? `Welcome to Sweet Serenity, ${firstName}` : `Welcome back to Sweet Serenity, ${firstName}`}</h1>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#756858]">
                 <span>{user.email}</span><span className="hidden text-[#C9A86A] sm:inline">/</span><span>Member since {memberSince}</span>
               </div>
@@ -150,7 +170,7 @@ function AccountPage() {
         )}
 
         {!ordersLoading && orders.length === 0 && (
-          <WelcomeExperience firstName={firstName} />
+          <WelcomeExperience firstName={firstName} firstVisit={loginGreeting === "first"} />
         )}
 
         {!ordersLoading && orders.length > 0 && (
@@ -197,11 +217,11 @@ function AccountPage() {
               <div className="mt-5 space-y-3">
                 <QuickAction icon={<CakeSlice size={18} />} label="Re-order Last Cake" to="/shop" />
                 <QuickAction icon={<Truck size={18} />} label="Track Order" to="/shop" />
-                <a href="https://wa.me/254713380906?text=Hello%20Grace%20Patisserie!%20I%20have%20a%20question%20about%20your%20cakes." target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-[14px] border border-[#EFE4CD] px-4 py-3.5 text-sm font-semibold text-[#594A39] transition hover:border-[#C9A86A] hover:bg-[#FFF8F0]"><Package size={18} className="text-[#C9A86A]" />Contact Atelier<span className="ml-auto text-[#C9A86A]">↗</span></a>
+                <a href="https://wa.me/254713808906?text=Hello%20Sweet%20Serenity!%20I%20have%20a%20question%20about%20your%20cakes." target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-[14px] border border-[#EFE4CD] px-4 py-3.5 text-sm font-semibold text-[#594A39] transition hover:border-[#C9A86A] hover:bg-[#FFF8F0]"><Package size={18} className="text-[#C9A86A]" />Contact Sweet Serenity<span className="ml-auto text-[#C9A86A]">↗</span></a>
               </div>
             </section>
             <section className="overflow-hidden rounded-[24px] bg-[#2B2118] p-6 text-white shadow-[0_14px_45px_rgba(43,33,24,0.18)]">
-              <p className="text-[10px] font-bold tracking-[0.28em] text-[#D8B875]">ATELIER HOURS</p><h2 className="mt-2 font-serif text-2xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Siaya County, Gem, Yala</h2><div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-sm"><span className="text-white/65">Monday - Saturday</span><strong>8am - 7pm</strong></div><div className="mt-3 flex items-center justify-between text-sm"><span className="text-white/65">Sunday</span><strong>Private orders</strong></div>
+              <p className="text-[10px] font-bold tracking-[0.28em] text-[#D8B875]">ATELIER HOURS</p><h2 className="mt-2 font-serif text-2xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Yala, Siaya County, Kenya</h2><div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-sm"><span className="text-white/65">Monday - Saturday</span><strong>8am - 7pm</strong></div><div className="mt-3 flex items-center justify-between text-sm"><span className="text-white/65">Sunday</span><strong>Private orders</strong></div>
             </section>
           </aside>
         </div>
@@ -212,17 +232,17 @@ function AccountPage() {
   );
 }
 
-function WelcomeExperience({ firstName }: { firstName: string }) {
+function WelcomeExperience({ firstName, firstVisit }: { firstName: string; firstVisit: boolean }) {
   return (
     <div>
       <section className="relative mt-6 overflow-hidden rounded-[28px] border border-[#C9A86A] bg-[#FFF8F0] px-6 py-14 text-center shadow-[0_18px_60px_rgba(201,168,106,0.14)] md:px-12 md:py-16">
         <div className="absolute left-8 top-8 h-24 w-24 rounded-full border border-[#C9A86A]/20" />
         <div className="absolute bottom-8 right-8 h-24 w-24 rounded-full border border-[#C9A86A]/20" />
-        <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">GRACE PATISSERIE • SIAYA COUNTY, GEM, YALA ATELIER</p>
-        <h2 className="mt-5 font-serif text-4xl leading-tight text-[#2B2118] md:text-6xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Welcome to Grace Patisserie, {firstName}</h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#756858] md:text-lg">Your sweet sanctuary awaits. Where every cake is a work of art, baked with love.</p>
+        <p className="text-[11px] font-bold tracking-[0.38em] text-[#C9A86A]">SWEET SERENITY • SIAYA COUNTY, YALA, KENYA</p>
+        <h2 className="mt-5 font-serif text-4xl leading-tight text-[#2B2118] md:text-6xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>{firstVisit ? `Welcome to Sweet Serenity, ${firstName}` : `Welcome back, ${firstName}`}</h2>
+        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#756858] md:text-lg">{firstVisit ? "Your sweet sanctuary awaits. Where every cake is a work of art, baked with love." : "Welcome back to your sweet sanctuary. Your favourite cakes are waiting."}</p>
         <div className="mt-7 text-[#C9A86A] tracking-[1em]">✦ ✦ ✦</div>
-        <span className="mt-7 inline-flex rounded-full border border-[#D8B875] bg-[#FFF4D6] px-5 py-2 text-[11px] font-bold tracking-[0.18em] text-[#80601F]">NEW ATELIER MEMBER</span>
+        <span className="mt-7 inline-flex rounded-full border border-[#D8B875] bg-[#FFF4D6] px-5 py-2 text-[11px] font-bold tracking-[0.18em] text-[#80601F]">{firstVisit ? "NEW ATELIER MEMBER" : "SWEET SERENITY MEMBER"}</span>
       </section>
 
       <section className="mt-6 grid gap-5 md:grid-cols-3">
@@ -235,7 +255,7 @@ function WelcomeExperience({ firstName }: { firstName: string }) {
         <p className="max-w-xl font-serif text-xl leading-relaxed text-[#D8B875] md:text-2xl" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>Your first order is special. Let our atelier create something unforgettable for you.</p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link to="/shop" className="rounded-full bg-[#C9A86A] px-6 py-3 text-center text-xs font-bold tracking-[0.12em] text-[#2B2118]">Start Your Order →</Link>
-          <a href="https://wa.me/254713380906?text=Hello%20Grace%20Patisserie!%20I%20have%20a%20question%20about%20your%20cakes." target="_blank" rel="noreferrer" className="rounded-full border border-[#D8B875] px-6 py-3 text-center text-xs font-bold tracking-[0.12em] text-[#D8B875]">Chat on WhatsApp</a>
+          <a href="https://wa.me/254713808906?text=Hello%20Sweet%20Serenity!%20I%20have%20a%20question%20about%20your%20cakes." target="_blank" rel="noreferrer" className="rounded-full border border-[#D8B875] px-6 py-3 text-center text-xs font-bold tracking-[0.12em] text-[#D8B875]">Chat on WhatsApp</a>
         </div>
       </section>
     </div>

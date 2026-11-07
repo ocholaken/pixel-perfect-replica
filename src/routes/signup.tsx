@@ -129,7 +129,7 @@ function SignUp() {
   if (success) return (
     <main className="min-h-screen bg-[#fefaf3] flex items-center justify-center p-4">
       <section className="w-full max-w-[560px] rounded-[24px] border border-[#e8d5b5] bg-white px-8 py-12 text-center shadow-[0_25px_80px_rgba(201,168,106,0.18)]" role="status">
-        <p className="mb-5 text-[11px] font-semibold tracking-[0.4em] text-[#c9a86a]">GRACE PATISSERIE</p>
+        <p className="mb-5 text-[11px] font-semibold tracking-[0.4em] text-[#c9a86a]">SWEET SERENITY</p>
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#c9a86a] text-3xl text-white shadow-[0_12px_30px_rgba(201,168,106,0.35)]">✓</div>
         <h1 className="mt-5 font-serif text-[42px] text-black">Welcome to the Atelier</h1>
         <p className="mt-2 text-sm text-[#6b6b6b]">Your account is crafted. Please sign in.</p>
@@ -145,7 +145,7 @@ function SignUp() {
       <div className="absolute bottom-[18%] left-[10%] w-32 h-32 rounded-full bg-[#f9e8c9] border border-[#c9a86a]/20" />
 
       <form onSubmit={submit} noValidate className="relative w-full max-w-[560px] bg-white border border-[#e8d5b5] rounded-[24px] shadow-[0_25px_80px_rgba(201,168,106,0.18)] p-8 md:p-10">
-        <p className="text-center text-[11px] tracking-[0.4em] text-[#c9a86a] font-semibold mb-5">GRACE PATISSERIE</p>
+        <p className="text-center text-[11px] tracking-[0.4em] text-[#c9a86a] font-semibold mb-5">SWEET SERENITY</p>
         <h1 className="font-serif text-[42px] font-normal text-black text-center leading-none tracking-tight">Join the Atelier</h1>
         <p className="text-center text-[14px] text-[#6b6b6b] mt-3">Create your account for a sweeter experience</p>
         <div className="mx-auto mt-5 w-16 h-px bg-[#c9a86a]/50" />

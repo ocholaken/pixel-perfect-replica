@@ -22,7 +22,7 @@ import { SiteLayout } from "../components/site";
 import { Toaster } from "../components/ui/sonner";
 import { AuthProvider } from "../context/AuthContext";
 
-const WHATSAPP_URL = "https://wa.me/254713380906?text=Hello%20Grace%20Patisserie!%20I%20have%20a%20question%20about%20your%20cakes.";
+const WHATSAPP_URL = "https://wa.me/254713808906?text=Hello%20Sweet%20Serenity!%20I%20have%20a%20question%20about%20your%20cakes.";
 
 function NotFoundComponent() {
   return (
@@ -89,14 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Grace Patisserie | Cakes in Nairobi" },
-            { name: "description", content: "Handcrafted celebration cakes, custom designs and cupcakes from Grace Patisserie." },
-      { name: "author", content: "Grace Patisserie" },
-      { property: "og:title", content: "Grace Patisserie | Cakes in Nairobi" },
-      { property: "og:description", content: "Handcrafted celebration cakes, custom designs and cupcakes from Grace Patisserie." },
+      { title: "Sweet Serenity | Cakes in Yala, Siaya County" },
+            { name: "description", content: "Exquisite celebration cakes, custom designs and cupcakes from Sweet Serenity in Yala, Kenya." },
+      { name: "author", content: "Sweet Serenity" },
+      { property: "og:title", content: "Sweet Serenity | Cakes in Yala, Siaya County" },
+      { property: "og:description", content: "Exquisite celebration cakes, custom designs and cupcakes from Sweet Serenity in Yala, Kenya." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@GracePatisserie" },
+      { name: "twitter:site", content: "@sweetserenity" },
     ],
     links: [
       {
@@ -156,7 +156,7 @@ function RootComponent() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
-            aria-label="Chat with Grace Patisserie on WhatsApp"
+            aria-label="Chat with Sweet Serenity on WhatsApp"
             className="fixed bottom-6 right-4 z-50 flex h-14 items-center gap-3 rounded-full bg-[#25D366] pl-4 pr-5 text-white shadow-[0_10px_30px_rgba(37,211,102,.35)] transition duration-300 hover:-translate-y-1 hover:bg-[#20BD5A] hover:shadow-[0_14px_36px_rgba(37,211,102,.42)] sm:right-6"
           >
             <MessageCircle className="h-6 w-6 shrink-0" strokeWidth={2.2} aria-hidden="true" />

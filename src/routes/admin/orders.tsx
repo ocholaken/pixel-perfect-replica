@@ -10,7 +10,7 @@ export const Route = createFileRoute("/admin/orders")({ component: AdminOrdersPa
 
 type Order = { id: string; user_name?: string; user_email?: string; cake_name?: string; items?: any[]; total_price?: number; total?: number; subtotal?: number; status?: string; created_at?: string };
 const currency = (value: number) => `KSh ${value.toLocaleString("en-KE")}`;
-const shortId = (id: string) => `GRACE-${id.replace(/-/g, "").slice(-6).toUpperCase()}`;
+const shortId = (id: string) => `SS-${id.replace(/-/g, "").slice(-6).toUpperCase()}`;
 const itemLabel = (order: Order) => Array.isArray(order.items) ? order.items.map((item) => item?.name ?? item?.cake_name).filter(Boolean).join(", ") || order.cake_name || "Atelier order" : order.cake_name || "Atelier order";
 
 function StatusBadge({ status }: { status: string }) {
@@ -70,7 +70,7 @@ function AdminOrdersPage() {
 
   return <main className="min-h-screen bg-[#FFF8F0] px-4 py-12 text-[#2B2118]">
     <div className="mx-auto max-w-[1400px]">
-      <Link to="/" className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A86A]">Grace Patisserie</Link>
+      <Link to="/" className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A86A]">Sweet Serenity</Link>
       <h1 className="mt-3 font-serif text-5xl">Admin Orders</h1>
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Total Orders", orders.length], ["Pending", count("pending")], ["Confirmed", count("confirmed")], ["Total Revenue", currency(revenue)]].map(([label, value]) => <div key={String(label)} className="rounded-[20px] border-t-[3px] border-[#C9A86A] bg-white p-6 shadow-sm"><p className="text-xs font-bold uppercase tracking-wider text-[#756858]">{label}</p><p className="mt-3 font-serif text-3xl">{value}</p></div>)}</section>
       <section className="mt-8 rounded-[24px] border border-[#E9DCC5] bg-white p-5 shadow-sm">

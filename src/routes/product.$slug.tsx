@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useCart, useProducts } from "../lib/store";
 
 export const Route = createFileRoute("/product/$slug")({ component: ProductPage });
@@ -36,7 +37,7 @@ function ProductPage() {
           <div><label>Flavour</label><select value={flavour} onChange={(event) => setFlavour(event.target.value)}>{product.flavours.map((item) => <option key={item}>{item}</option>)}</select></div>
           <div><label>Quantity</label><input type="number" min="1" value={quantity} onChange={(event) => setQuantity(Math.max(1, +event.target.value))} /></div>
         </div>
-        <button className="btn btn-primary" onClick={() => add({ slug: product.slug, name: product.name, image: product.image, size, flavour, price: Number(product.price), quantity })}>Add to Cart — KES {(Number(product.price) * quantity).toLocaleString()}</button>
+        <button className="btn btn-primary" onClick={() => { add({ slug: product.slug, name: product.name, image: product.image, size: size || product.sizes[0] || "Standard", flavour: flavour || product.flavours[0] || "Signature selection", price: Number(product.price), quantity }); toast.success(`${product.name} added to your cart`); }}>Add to Cart — KES {(Number(product.price) * quantity).toLocaleString()}</button>
       </div>
     </div>
   </section>;

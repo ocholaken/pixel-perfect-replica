@@ -14,6 +14,7 @@ const cakeImageUrls: Record<string, string> = {
   "/images/cakes/vanilla-berry.jpg": "/images/cakes/vanilla-berry.jpg",
   "/images/cakes/wedding-blush.jpg": "/images/cakes/wedding-blush.jpg",
   "/images/cakes/wedding-ivory.jpg": "/images/cakes/wedding-ivory.jpg",
+  "/images/cakes/Tra.jpg": "/images/cakes/Tra.jpg",
   "/images/cakes/baby-shower.jpg": "/images/cakes/baby-shower.jpg",
 };
 
